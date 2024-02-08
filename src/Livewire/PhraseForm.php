@@ -34,13 +34,13 @@ class PhraseForm extends Component
             return;
         }
 
-        if (! blank($this->phrase->source) && $this->missingParameters()) {
+        if (!blank($this->phrase->source) && $this->missingParameters()) {
             $this->notification()->error('Required parameters are missing.');
 
             return;
         }
 
-        $this->phrase->value = $this->content;
+        $this->phrase->value = trim($this->content);
 
         $this->phrase->save();
 
@@ -67,7 +67,7 @@ class PhraseForm extends Component
     {
         if (is_array($this->phrase->source->parameters)) {
             foreach ($this->phrase->source->parameters as $parameter) {
-                if (! str_contains($this->phrase->value, ":$parameter")) {
+                if (!str_contains($this->content, ":$parameter")) {
                     return true;
                 }
             }
