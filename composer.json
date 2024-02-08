@@ -23,7 +23,6 @@
         "brick/varexporter": "^0.3.7",
         "livewire/livewire": "^3.0",
         "outhebox/blade-flags": "^1.0",
-        "saade/blade-iconsax": "^1.0",
         "wire-elements/modal": "^2.0",
         "wireui/wireui": "^1.18"
     },
