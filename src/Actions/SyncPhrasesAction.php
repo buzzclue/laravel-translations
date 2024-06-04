@@ -8,7 +8,7 @@ use Outhebox\TranslationsUI\Models\TranslationFile;
 
 class SyncPhrasesAction
 {
-    public static function execute(Translation $source, $key, $value, $locale, $file): void
+    public static function execute(Translation $source, $key, $value, $locale, $file, $vendor = null): void
     {
         if (is_array($value) && empty($value)) {
             return;
@@ -27,13 +27,41 @@ class SyncPhrasesAction
 
         $isRoot = $file === $locale.'.json' || $file === $locale.'.php';
         $extension = pathinfo($file, PATHINFO_EXTENSION);
-        $filePath = str_replace('.'.$extension, '', str_replace($locale.DIRECTORY_SEPARATOR, '', $file));
 
-        $translationFile = TranslationFile::firstOrCreate([
-            'name' => $filePath,
-            'extension' => $extension,
-            'is_root' => $isRoot,
-        ]);
+        if ($vendor) {
+            $filePath = str($file)->replace(".$extension", '')->toString();
+        } else {
+            $filePath = str_replace(".$extension", '', str_replace($locale.DIRECTORY_SEPARATOR, '', $file));
+        }
+
+        if ($vendor) {
+            $checkFile = TranslationFile::where('vendor', $vendor)->get();
+
+            $fileExists = false;
+
+            foreach ($checkFile as $file) {
+                if (str($file->name)->endsWith(str($filePath)->explode('/')->last())) {
+                    $fileExists = true;
+                }
+            }
+
+            if ($fileExists) {
+                $translationFile = $checkFile->first();
+            } else {
+                $translationFile = TranslationFile::firstOrCreate([
+                    'extension' => $extension,
+                    'is_root' => $isRoot,
+                    'name' => $filePath,
+                    'vendor' => $vendor,
+                ]);
+            }
+        } else {
+            $translationFile = TranslationFile::firstOrCreate([
+                'extension' => $extension,
+                'is_root' => $isRoot,
+                'name' => $filePath,
+            ]);
+        }
 
         $key = config('translations.include_file_in_key') && ! $isRoot ? "{$translationFile->name}.{$key}" : $key;
 

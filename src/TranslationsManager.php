@@ -61,16 +61,42 @@ class TranslationsManager
         $translations = [];
         $rootFileName = "$locale.json";
 
-        $files = [];
+        $files = collect();
+        $vendorFiles = collect();
 
         if ($this->filesystem->exists(lang_path($locale))) {
-            $files = $this->filesystem->allFiles(lang_path($locale));
+            $files = collect($this->filesystem->allFiles(lang_path($locale)));
         }
 
-        collect($files)
-            ->map(function (SplFileInfo $file) use ($locale) {
+        if (config('translations.vendor_support')) {
+            foreach ($this->filesystem->directories(lang_path('vendor')) as $vendorDir) {
+                if (!in_array(basename($vendorDir), config('translations.vendor_excluded', []))) {
+                    foreach ($this->filesystem->allFiles($vendorDir) as $vendorFile) {
+                        $relativePath = str_replace(DIRECTORY_SEPARATOR, '/', $vendorFile->getRelativePath());
+
+                        // Check if the file path starts with the locale or contains the locale as a subdirectory
+                        if (str_starts_with($relativePath, "$locale/") || str_starts_with($relativePath, "$locale")) {
+                            $vendorFiles->push($vendorFile);
+                        }
+                    }
+                }
+            }
+        }
+
+        $allFiles = $files->merge($vendorFiles);
+
+
+        $allFiles->map(function (SplFileInfo $file) use ($locale) {
                 if ($file->getRelativePath() === '') {
                     return $locale.DIRECTORY_SEPARATOR.$file->getFilename();
+                }
+
+                if (str_contains($file->getRealPath(), 'vendor')) {
+                    $vendorParts = explode(DIRECTORY_SEPARATOR, $file->getRealPath());
+                    $vendorIndex = array_search('vendor', $vendorParts);
+                    $vendorName = $vendorParts[$vendorIndex + 1];
+
+                    return 'vendor'.DIRECTORY_SEPARATOR.$vendorName.DIRECTORY_SEPARATOR.$file->getRelativePath().DIRECTORY_SEPARATOR.$file->getFilename();
                 }
 
                 return $locale.DIRECTORY_SEPARATOR.$file->getRelativePath().DIRECTORY_SEPARATOR.$file->getFilename();
@@ -80,12 +106,6 @@ class TranslationsManager
             })
             ->filter(function ($file) use ($locale) {
                 foreach (Str::replace('/', DIRECTORY_SEPARATOR, config('translations.exclude_files')) as $excludeFile) {
-
-                    /**
-                     * <h1>File exclusion by wildcard</h1>
-                     * <h3>$file is with language like <code>en/book/create.php</code> while $excludedFile contains only wildcards or path like <code>book/create.php</code></h3>
-                     * <h3>So, we need to remove the language part from $file before comparing with $excludeFile</h3>
-                     */
                     if (fnmatch($excludeFile, str_replace($locale.DIRECTORY_SEPARATOR, '', $file)) || Str::contains(str_replace($locale.DIRECTORY_SEPARATOR, '', $file), $excludeFile)) {
                         return false;
                     }
@@ -155,7 +175,14 @@ class TranslationsManager
                     if ($file === "$locale.json") {
                         $langPath = $download ? storage_path("app/translations/$file") : lang_path("$file");
                     } else {
-                        $langPath = $download ? storage_path("app/translations/$locale/$file") : lang_path("$locale/$file");
+                        if (str($file)->contains('vendor')) {
+                            $vendor = str($file)->replaceFirst('vendor/', '')->explode('/')->first();
+                            $langPath = $download ? storage_path("app/translations/$file") : lang_path("$file");
+
+                            dd($langPath);
+                        } else {
+                            $langPath = $download ? storage_path("app/translations/$locale/$file") : lang_path("$locale/$file");
+                        }
                     }
 
                     if (! $this->filesystem->isDirectory(dirname($langPath))) {

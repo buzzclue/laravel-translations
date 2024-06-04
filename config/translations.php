@@ -75,4 +75,28 @@ return [
     'exclude_files' => [
         //'validation.php', // Exclude default validation for example.
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Vendor Support
+    |--------------------------------------------------------------------------
+    |
+    | The option to enable or disable the vendor support. If enabled, the
+    | vendor directory will be scanned for translations.
+    |
+    */
+    'vendor_support' => env('TRANSLATIONS_VENDOR_SUPPORT', true),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Exclude Vendor Folder
+    |--------------------------------------------------------------------------
+    |
+    | The following vendor folders will be ignored during the import process.
+    | and those files will be ignored in every language.
+    |
+    */
+    'vendor_excluded' => [
+        //'filament',
+    ],
 ];

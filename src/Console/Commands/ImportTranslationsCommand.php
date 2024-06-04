@@ -104,7 +104,13 @@ class ImportTranslationsCommand extends Command
     {
         foreach ($this->manager->getTranslations($locale) as $file => $translations) {
             foreach (Arr::dot($translations) as $key => $value) {
-                SyncPhrasesAction::execute($translation, $key, $value, $locale, $file);
+                if (str($file)->startsWith('vendor/')) {
+                    $vendor = str($file)->replaceFirst('vendor/', '')->explode('/')->first();
+
+                    SyncPhrasesAction::execute($translation, $key, $value, $locale, $file, $vendor);
+                } else {
+                    SyncPhrasesAction::execute($translation, $key, $value, $locale, $file);
+                }
             }
         }
 
@@ -136,7 +142,13 @@ class ImportTranslationsCommand extends Command
                     $fileName = Str::replaceStart(config('translations.source_language').'/', "{$locale}/", $fileName);
                 }
 
-                SyncPhrasesAction::execute($phrase->translation, $phrase->key, '', $locale, $fileName);
+                if (str($fileName)->startsWith('vendor/')) {
+                    $vendor = str($fileName)->replaceFirst('vendor/', '')->explode('/')->first();
+
+                    SyncPhrasesAction::execute($phrase->translation, $phrase->key, '', $locale, $fileName, $vendor);
+                } else {
+                    SyncPhrasesAction::execute($phrase->translation, $phrase->key, '', $locale, $fileName);
+                }
             }
         });
     }

@@ -19,6 +19,7 @@ class CopyPhrasesFromSourceAction
                     'is_root' => true,
                     'extension' => $file->extension,
                     'name' => $translation->language->code,
+                    'vendor' => $file->vendor ?? null,
                 ]);
             }
 

@@ -24,4 +24,11 @@ class TranslationFileFactory extends Factory
             'extension' => 'json',
         ]);
     }
+
+    public function withVendor(): self
+    {
+        return $this->state([
+            'vendor' => 'filament',
+        ]);
+    }
 }

@@ -14,6 +14,8 @@ class TranslationFileResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'isRoot' => $this->is_root,
+            'vendor' => $this->vendor,
             'extension' => $this->extension,
             'nameWithExtension' => "$this->name.$this->extension",
             'phrases' => PhraseResource::collection($this->whenLoaded('phrases')),

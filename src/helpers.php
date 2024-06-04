@@ -65,6 +65,7 @@ if (! function_exists('buildPhrasesTree')) {
 
                 continue;
             }
+
             setArrayValue(
                 array: $tree[$locale][$phrase->file->file_name],
                 key: $phrase->key,
