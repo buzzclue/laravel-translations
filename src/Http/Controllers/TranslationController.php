@@ -10,7 +10,8 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Momentum\Modal\Modal;
 use Outhebox\TranslationsUI\Actions\CreateTranslationForLanguageAction;
-use Outhebox\TranslationsUI\Http\Resources\LanguageResource;
+use Outhebox\TranslationsUI\Http\Resources\Collections\LanguageCollection;
+use Outhebox\TranslationsUI\Http\Resources\Collections\TranslationCollection;
 use Outhebox\TranslationsUI\Http\Resources\TranslationResource;
 use Outhebox\TranslationsUI\Models\Language;
 use Outhebox\TranslationsUI\Models\Translation;
@@ -68,7 +69,7 @@ class TranslationController extends BaseController
         $sourceTranslation = $translations->firstWhere('source', true);
 
         return Inertia::render('translations/index', [
-            'translations' => TranslationResource::collection($allTranslations),
+            'translations' => (new TranslationCollection($allTranslations))?->collection,
             'sourceTranslation' => $sourceTranslation ? TranslationResource::make($sourceTranslation) : null,
         ]);
     }
@@ -76,9 +77,9 @@ class TranslationController extends BaseController
     public function create(): Modal
     {
         return Inertia::modal('translations/modals/add-translation', [
-            'languages' => LanguageResource::collection(
+            'languages' => new LanguageCollection(
                 Language::whereNotIn('id', Translation::pluck('language_id')->toArray())->get()
-            )->toArray(request()),
+            ),
         ])->baseRoute('ltu.translation.index');
     }
 

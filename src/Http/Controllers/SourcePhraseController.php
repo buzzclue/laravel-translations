@@ -10,6 +10,8 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Momentum\Modal\Modal;
 use Outhebox\TranslationsUI\Actions\CreateSourceKeyAction;
+use Outhebox\TranslationsUI\Http\Resources\Collections\PhraseCollection;
+use Outhebox\TranslationsUI\Http\Resources\Collections\TranslationFileCollection;
 use Outhebox\TranslationsUI\Http\Resources\PhraseResource;
 use Outhebox\TranslationsUI\Http\Resources\TranslationFileResource;
 use Outhebox\TranslationsUI\Http\Resources\TranslationResource;
@@ -51,9 +53,9 @@ class SourcePhraseController extends BaseController
             ->withQueryString();
 
         return Inertia::render('source/index', [
-            'phrases' => PhraseResource::collection($phrases),
+            'phrases' => new PhraseCollection($phrases),
             'translation' => TranslationResource::make($source),
-            'files' => TranslationFileResource::collection(collect($files)),
+            'files' => (new TranslationFileCollection(collect($files)))->collection,
             'filter' => $request->input('filter', collect()),
         ]);
     }
@@ -70,7 +72,7 @@ class SourcePhraseController extends BaseController
         }
 
         return Inertia::modal('source/modals/add-source-key', [
-            'files' => TranslationFileResource::collection(collect($files)),
+            'files' => new TranslationFileCollection(collect($files)),
         ])->baseRoute('ltu.source_translation');
     }
 
@@ -116,8 +118,8 @@ class SourcePhraseController extends BaseController
             'phrase' => PhraseResource::make($phrase),
             'translation' => TranslationResource::make($phrase->translation),
             'source' => TranslationResource::make($phrase->translation),
-            'files' => TranslationFileResource::collection($files),
-            'similarPhrases' => PhraseResource::collection($phrase->similarPhrases()),
+            'files' => TranslationFileResource::collection(collect($files))->resolve(),
+            'similarPhrases' => new PhraseCollection($phrase->similarPhrases()),
         ]);
     }
 

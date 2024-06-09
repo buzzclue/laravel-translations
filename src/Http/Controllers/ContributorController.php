@@ -11,8 +11,8 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Momentum\Modal\Modal;
 use Outhebox\TranslationsUI\Enums\RoleEnum;
-use Outhebox\TranslationsUI\Http\Resources\ContributorResource;
-use Outhebox\TranslationsUI\Http\Resources\InviteResource;
+use Outhebox\TranslationsUI\Http\Resources\Collections\ContributorCollection;
+use Outhebox\TranslationsUI\Http\Resources\Collections\InviteCollection;
 use Outhebox\TranslationsUI\Mail\InviteCreated;
 use Outhebox\TranslationsUI\Models\Contributor;
 use Outhebox\TranslationsUI\Models\Invite;
@@ -22,8 +22,8 @@ class ContributorController extends BaseController
     public function index(): Response
     {
         return Inertia::render('contributor/index', [
-            'invited' => InviteResource::collection(Invite::paginate(10)),
-            'contributors' => ContributorResource::collection(Contributor::paginate(10)),
+            'invited' => new InviteCollection(Invite::paginate(10)),
+            'contributors' => new ContributorCollection(Contributor::paginate(10)),
         ]);
     }
 

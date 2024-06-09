@@ -8,8 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Inertia\Inertia;
 use Inertia\Response;
+use Outhebox\TranslationsUI\Http\Resources\Collections\PhraseCollection;
+use Outhebox\TranslationsUI\Http\Resources\Collections\TranslationFileCollection;
 use Outhebox\TranslationsUI\Http\Resources\PhraseResource;
-use Outhebox\TranslationsUI\Http\Resources\TranslationFileResource;
 use Outhebox\TranslationsUI\Http\Resources\TranslationResource;
 use Outhebox\TranslationsUI\Models\Phrase;
 use Outhebox\TranslationsUI\Models\Translation;
@@ -63,9 +64,9 @@ class PhraseController extends BaseController
             ->withQueryString();
 
         return Inertia::render('phrases/index', [
-            'phrases' => PhraseResource::collection($phrases),
+            'phrases' => new PhraseCollection($phrases),
             'translation' => TranslationResource::make($translation),
-            'files' => TranslationFileResource::collection(collect($files)),
+            'files' => (new TranslationFileCollection(collect($files)))?->collection,
             'filter' => $request->input('filter', collect()),
         ]);
     }
@@ -85,7 +86,7 @@ class PhraseController extends BaseController
             'phrase' => PhraseResource::make($phrase),
             'translation' => TranslationResource::make($translation),
             'source' => TranslationResource::make(Translation::where('source', true)?->first()),
-            'similarPhrases' => PhraseResource::collection($phrase->similarPhrases()),
+            'similarPhrases' => new PhraseCollection($phrase->similarPhrases()),
             'suggestedTranslations' => [
                 'google' => [
                     'id' => 'google',
