@@ -9,8 +9,8 @@ use Illuminate\Routing\Controller as BaseController;
 use Inertia\Inertia;
 use Inertia\Response;
 use Outhebox\TranslationsUI\Http\Resources\Collections\PhraseCollection;
-use Outhebox\TranslationsUI\Http\Resources\Collections\TranslationFileCollection;
 use Outhebox\TranslationsUI\Http\Resources\PhraseResource;
+use Outhebox\TranslationsUI\Http\Resources\TranslationFileResource;
 use Outhebox\TranslationsUI\Http\Resources\TranslationResource;
 use Outhebox\TranslationsUI\Models\Phrase;
 use Outhebox\TranslationsUI\Models\Translation;
@@ -66,7 +66,7 @@ class PhraseController extends BaseController
         return Inertia::render('phrases/index', [
             'phrases' => new PhraseCollection($phrases),
             'translation' => TranslationResource::make($translation),
-            'files' => (new TranslationFileCollection(collect($files)))?->collection,
+            'files' => TranslationFileResource::collection(collect($files))->resolve(),
             'filter' => $request->input('filter', collect()),
         ]);
     }

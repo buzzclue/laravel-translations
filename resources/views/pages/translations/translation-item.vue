@@ -53,9 +53,9 @@ watch(
                 </div>
 
                 <div class="hidden flex-1 flex-wrap content-center items-center gap-1 px-4 md:flex md:max-w-72 lg:max-w-80 xl:max-w-96">
-                    <div v-tooltip="`${translation.progress}` + ' strings translated'" class="w-full py-2">
+                    <div v-tooltip="`${translation.progress}` + '% strings translated'" class="w-full py-2">
                         <div class="translation-progress w-full overflow-hidden rounded-full bg-gray-200">
-                            <div class="h-2 bg-green-600" :style="{ width: `${translation.progress}` }"></div>
+                            <div class="h-2 bg-green-600" :style="{ width: `${translation.progress}%` }"></div>
                         </div>
                     </div>
                 </div>
