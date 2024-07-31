@@ -91,7 +91,7 @@ class PhraseController extends BaseController
                 'google' => [
                     'id' => 'google',
                     'engine' => 'Google Translate',
-                    'value' => (new GoogleTranslate())->preserveParameters()
+                    'value' => (new GoogleTranslate)->preserveParameters()
                         ->setSource($phrase->source->translation->language->code)
                         ->setTarget($translation->language->code)
                         ->translate($phrase->source->value),
@@ -127,19 +127,19 @@ class PhraseController extends BaseController
             ->whereNull('value')
             ->first();
 
+        if (! $nextPhrase) {
+            $nextPhrase = $translation->phrases()
+                ->where('id', '>', $phrase->id)
+                ->first();
+        }
+
         if ($nextPhrase) {
             return redirect()->route('ltu.phrases.edit', [
                 'translation' => $translation,
                 'phrase' => $nextPhrase,
-            ])->with('notification', [
-                'type' => 'success',
-                'body' => 'Phrase has been updated successfully',
             ]);
         }
 
-        return redirect()->route('ltu.phrases.index', $translation)->with('notification', [
-            'type' => 'success',
-            'body' => 'Phrase has been updated successfully',
-        ]);
+        return redirect()->route('ltu.phrases.index', $translation);
     }
 }

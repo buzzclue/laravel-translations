@@ -144,15 +144,15 @@ class SourcePhraseController extends BaseController
             ->whereNull('value')
             ->first();
 
+        if (! $nextPhrase) {
+            $nextPhrase = $phrase->translation->phrases()
+                ->where('id', '>', $phrase->id)
+                ->first();
+        }
+
         return $nextPhrase
-            ? redirect()->route('ltu.source_translation.edit', ['translation' => $phrase->translation, 'phrase' => $nextPhrase])->with('notification', [
-                'type' => 'success',
-                'body' => 'Phrase has been updated successfully',
-            ])
-            : redirect()->route('ltu.source_translation')->with('notification', [
-                'type' => 'success',
-                'body' => 'Phrase has been updated successfully',
-            ]);
+            ? redirect()->route('ltu.source_translation.edit', ['translation' => $phrase->translation, 'phrase' => $nextPhrase])
+            : redirect()->route('ltu.source_translation');
     }
 
     public function destroy(Phrase $phrase): RedirectResponse
