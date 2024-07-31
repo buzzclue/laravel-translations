@@ -19,6 +19,7 @@ const form = useForm({
 
 const submit = () => {
     form.post(route("ltu.phrases.update", { translation: props.translation.id, phrase: props.phrase.uuid }), {
+        preserveState: false,
         onSuccess: () => {
             form.reset()
         },
