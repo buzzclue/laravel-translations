@@ -20,7 +20,7 @@
     ],
     "require": {
         "php": "^8.0|^8.1|^8.2",
-        "brick/varexporter": "^0.3.7",
+        "brick/varexporter": "^0.6.0",
         "livewire/livewire": "^3.0",
         "outhebox/blade-flags": "^1.0",
         "wire-elements/modal": "^2.0",
