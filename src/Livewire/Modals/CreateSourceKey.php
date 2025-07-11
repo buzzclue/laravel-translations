@@ -6,11 +6,11 @@ use Illuminate\Contracts\View\View;
 use LivewireUI\Modal\ModalComponent;
 use Outhebox\LaravelTranslations\Models\Translation;
 use Outhebox\LaravelTranslations\Models\TranslationFile;
-use WireUi\Traits\Actions;
+use Outhebox\LaravelTranslations\Http\Traits\NotifiesWithWireUi;
 
 class CreateSourceKey extends ModalComponent
 {
-    use Actions;
+    use NotifiesWithWireUi;
 
     public $key;
 
@@ -69,7 +69,7 @@ class CreateSourceKey extends ModalComponent
 
         $this->dispatch('sourceKeyCreated');
 
-        $this->notification()->success('Source key created successfully.');
+        $this->notifySuccess('Source key created successfully.');
 
         $this->closeModal();
     }

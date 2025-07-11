@@ -2,19 +2,20 @@
 
 namespace Outhebox\LaravelTranslations\Livewire;
 
-use Illuminate\Contracts\Database\Query\Builder;
+use Livewire\Component;
+use WireUi\Facades\WireUi;
+use Livewire\WithPagination;
+use WireUi\Traits\WireUiActions;
 use Illuminate\Contracts\View\View;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Livewire\Component;
-use Livewire\WithPagination;
 use Outhebox\LaravelTranslations\Models\Phrase;
+use Illuminate\Contracts\Database\Query\Builder;
 use Outhebox\LaravelTranslations\Models\Translation;
-use WireUi\Traits\Actions;
+use Outhebox\LaravelTranslations\Http\Traits\NotifiesWithWireUi;
 
 class PhraseList extends Component
 {
-    use Actions;
-    use withPagination;
+    use withPagination, NotifiesWithWireUi, WireUiActions;
 
     public $search;
 
@@ -54,7 +55,7 @@ class PhraseList extends Component
 
         $phrase->delete();
 
-        $this->notification()->success('Source key deleted successfully!');
+        $this->notifySuccess('Source key deleted successfully!');
     }
 
     public function getPhrases(): LengthAwarePaginator

@@ -2,15 +2,16 @@
 
 namespace Outhebox\LaravelTranslations\Livewire;
 
-use Illuminate\Contracts\View\View;
 use Livewire\Component;
+use WireUi\Traits\WireUiActions;
+use Illuminate\Contracts\View\View;
 use Outhebox\LaravelTranslations\Models\Phrase;
 use Outhebox\LaravelTranslations\Models\Translation;
-use WireUi\Traits\Actions;
+use Outhebox\LaravelTranslations\Http\Traits\NotifiesWithWireUi;
 
 class PhraseForm extends Component
 {
-    use Actions;
+    use WireUiActions, NotifiesWithWireUi;
 
     public $content = '';
 
@@ -29,13 +30,13 @@ class PhraseForm extends Component
     public function save(): void
     {
         if (blank($this->content)) {
-            $this->notification()->error('Please enter a translation.');
+            $this->notifyError('Please enter a translation.');
 
             return;
         }
 
         if (!blank($this->phrase->source) && $this->missingParameters()) {
-            $this->notification()->error('Required parameters are missing.');
+            $this->notifyError('Required parameters are missing.');
 
             return;
         }
@@ -44,7 +45,7 @@ class PhraseForm extends Component
 
         $this->phrase->save();
 
-        $this->notification()->success('Phrase updated successfully!');
+        $this->notifySuccess('Phrase updated successfully!');
 
         $nextPhrase = $this->translation->phrases()
             ->where('id', '>', $this->phrase->id)

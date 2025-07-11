@@ -2,18 +2,18 @@
 
 namespace Outhebox\LaravelTranslations\Livewire;
 
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
+use WireUi\Traits\WireUiActions;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Contracts\View\View;
 use Outhebox\LaravelTranslations\Models\Translation;
-use WireUi\Traits\Actions;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Outhebox\LaravelTranslations\Http\Traits\NotifiesWithWireUi;
 
 class TranslationsList extends Component
 {
-    use Actions;
-    use withPagination;
+    use WithPagination, NotifiesWithWireUi, WireUiActions;
 
     public $search;
 
@@ -65,7 +65,7 @@ class TranslationsList extends Component
             $translation->phrases()->delete();
             $translation->delete();
 
-            $this->notification()->success('Translation deleted successfully!');
+            $this->notifySuccess('Translation deleted successfully!');
         });
     }
 

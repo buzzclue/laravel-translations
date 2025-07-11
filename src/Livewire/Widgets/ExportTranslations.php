@@ -2,20 +2,20 @@
 
 namespace Outhebox\LaravelTranslations\Livewire\Widgets;
 
-use Illuminate\Contracts\View\View;
 use Livewire\Component;
+use Illuminate\Contracts\View\View;
 use Outhebox\LaravelTranslations\TranslationsManager;
-use WireUi\Traits\Actions;
+use Outhebox\LaravelTranslations\Http\Traits\NotifiesWithWireUi;
 
 class ExportTranslations extends Component
 {
-    use Actions;
+    use NotifiesWithWireUi;
 
     public function export(): void
     {
         app(TranslationsManager::class)->export();
 
-        $this->notification()->success('Translations exported successfully!');
+        $this->notifySuccess('Translations exported successfully!');
     }
 
     public function render(): View

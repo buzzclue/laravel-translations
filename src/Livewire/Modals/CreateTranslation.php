@@ -6,11 +6,11 @@ use Illuminate\Contracts\View\View;
 use LivewireUI\Modal\ModalComponent;
 use Outhebox\LaravelTranslations\Models\Language;
 use Outhebox\LaravelTranslations\Models\Translation;
-use WireUi\Traits\Actions;
+use Outhebox\LaravelTranslations\Http\Traits\NotifiesWithWireUi;
 
 class CreateTranslation extends ModalComponent
 {
-    use Actions;
+    use NotifiesWithWireUi;
 
     public $language;
 
@@ -56,9 +56,9 @@ class CreateTranslation extends ModalComponent
             ]);
         }
 
-        $this->dispatch('translationCreated', $translation->id);
+        $this->dispatch('translationCreated', postId: $translation->id);
 
-        $this->notification()->success('Translation created successfully.');
+        $this->notifySuccess('Translation created successfully.');
 
         $this->closeModal();
     }
