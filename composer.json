@@ -24,7 +24,7 @@
         "livewire/livewire": "^3.0",
         "outhebox/blade-flags": "^1.0",
         "wire-elements/modal": "^2.0",
-        "wireui/wireui": "^1.18"
+        "wireui/wireui": "^2.4"
     },
     "require-dev": {
         "laravel/pint": "^1.0",
