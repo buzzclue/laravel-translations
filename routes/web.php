@@ -15,6 +15,7 @@ Route::domain(config('translations.domain'))->group(function () {
         Route::middleware(RedirectIfNotOwner::class)->group(function () {
             Route::get('publish', [TranslationController::class, 'publish'])->name('translation.publish');
             Route::post('publish', [TranslationController::class, 'export'])->name('translation.export');
+            Route::post('import', [TranslationController::class, 'import'])->name('translation.import');
             Route::get('download', [TranslationController::class, 'download'])->name('translation.download');
         });
 

@@ -15,6 +15,7 @@ use Outhebox\TranslationsUI\Modal;
 use Outhebox\TranslationsUI\Models\Language;
 use Outhebox\TranslationsUI\Models\Translation;
 use Outhebox\TranslationsUI\TranslationsManager;
+use Illuminate\Support\Facades\Artisan;
 
 class TranslationController extends BaseController
 {
@@ -34,6 +35,27 @@ class TranslationController extends BaseController
             return back()->with('notification', [
                 'type' => 'success',
                 'body' => 'Translations have been exported successfully',
+            ]);
+        } catch (Exception $e) {
+            return back()->with('notification', [
+                'type' => 'error',
+                'body' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function import(): RedirectResponse
+    {
+        try {
+            set_time_limit(0);
+
+            Artisan::call('translations:import', [
+                '--no-overwrite' => true,
+            ]);
+
+            return back()->with('notification', [
+                'type' => 'success',
+                'body' => 'Translations have been imported successfully',
             ]);
         } catch (Exception $e) {
             return back()->with('notification', [

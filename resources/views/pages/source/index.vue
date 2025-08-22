@@ -82,34 +82,38 @@ function toggleSelection() {
 const isAllSelected = computed(() => selectedIds.value.length === Object.keys(props.phrases.data).length)
 </script>
 <template>
+
     <Head title="Base Language" />
 
     <LayoutDashboard>
-        <div class="w-full bg-white shadow">
-            <div class="mx-auto flex max-w-7xl items-center justify-between px-6 lg:px-8">
+        <div class="w-full bg-white shadow-sm rounded">
+            <div class="mx-auto flex w-full items-center justify-between px-3 mt-3">
                 <div class="flex w-full items-center">
                     <div class="flex w-full items-center gap-3 py-4">
-                        <Link :href="route('ltu.source_translation')" class="flex items-center gap-2 rounded-md border border-transparent bg-gray-50 px-2 py-1 hover:border-blue-400 hover:bg-blue-100">
-                            <div class="h-5 shrink-0">
-                                <Flag :country-code="translation.language.code" width="w-5" />
-                            </div>
+                        <Link :href="route('ltu.source_translation')"
+                            class="flex items-center gap-2 rounded-md border border-transparent bg-gray-50 px-2 py-1 hover:border-blue-400 hover:bg-blue-100">
+                        <div class="h-5 shrink-0">
+                            <Flag :country-code="translation.language.code" width="w-5" />
+                        </div>
 
-                            <div class="flex items-center space-x-2">
-                                <div class="text-sm font-semibold text-gray-600" v-text="translation.language.name"></div>
-                            </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="text-sm font-semibold text-gray-600" v-text="translation.language.name"></div>
+                        </div>
                         </Link>
 
-                        <div class="rounded-md border bg-white px-1.5 py-0.5 text-sm text-gray-500" v-text="translation.language.code"></div>
+                        <div class="rounded-md border bg-white px-1.5 py-0.5 text-sm text-gray-500"
+                            v-text="translation.language.code"></div>
                     </div>
                 </div>
 
-                <Link v-tooltip="'Go back'" :href="route('ltu.translation.index')" class="flex size-10 items-center justify-center rounded-full bg-gray-100 p-1 hover:bg-gray-200">
-                    <IconArrowRight class="size-6 text-gray-400" />
+                <Link v-tooltip="'Go back'" :href="route('ltu.translation.index')"
+                    class="flex size-10 items-center justify-center rounded-full bg-gray-100 p-1 hover:bg-gray-200">
+                <IconArrowRight class="size-6 text-gray-400" />
                 </Link>
             </div>
         </div>
 
-        <div class="mx-auto max-w-7xl px-6 py-10 lg:px-8">
+        <div class="mx-auto py-4">
             <div class="w-full divide-y overflow-hidden rounded-md bg-white shadow">
                 <div class="flex w-full flex-wrap items-center justify-between gap-4 px-4 py-3 sm:flex-nowrap">
                     <div class="w-full max-w-full md:max-w-sm">
@@ -117,14 +121,16 @@ const isAllSelected = computed(() => selectedIds.value.length === Object.keys(pr
                     </div>
 
                     <div class="w-full max-w-full md:max-w-sm">
-                        <InputNativeSelect id="translationFile" v-model="phraseTranslationFile" size="md" placeholder="Filter by file" :items="translationFiles" />
+                        <InputNativeSelect id="translationFile" v-model="phraseTranslationFile" size="md"
+                            placeholder="Filter by file" :items="translationFiles" />
                     </div>
                 </div>
 
                 <div class="w-full shadow-md">
                     <div class="flex h-14 w-full divide-x">
                         <div class="flex w-12 items-center justify-center p-4">
-                            <InputCheckbox :disabled="!phrases.data.length" :checked="isAllSelected" @click="toggleSelection" />
+                            <InputCheckbox :disabled="!phrases.data.length" :checked="isAllSelected"
+                                @click="toggleSelection" />
                         </div>
 
                         <div class="grid w-full grid-cols-2 divide-x">
@@ -138,8 +144,9 @@ const isAllSelected = computed(() => selectedIds.value.length === Object.keys(pr
                         </div>
 
                         <div class="grid w-36 grid-cols-2 divide-x">
-                            <Link v-tooltip="'Add New Key'" :href="route('ltu.source_translation.add_source_key')" class="group flex items-center justify-center hover:bg-blue-50">
-                                <IconPlus class="size-5 text-gray-400 group-hover:text-blue-600" />
+                            <Link v-tooltip="'Add New Key'" :href="route('ltu.source_translation.add_source_key')"
+                                class="group flex items-center justify-center hover:bg-blue-50">
+                            <IconPlus class="size-5 text-gray-400 group-hover:text-blue-600" />
                             </Link>
 
                             <div class="flex h-full">
@@ -148,14 +155,12 @@ const isAllSelected = computed(() => selectedIds.value.length === Object.keys(pr
                                         v-tooltip="selectedIds.length ? 'Delete selected' : 'Select phrases to delete'"
                                         type="button"
                                         class="relative inline-flex size-14 select-none items-center justify-center p-4 text-sm font-medium uppercase tracking-wide text-gray-400 no-underline outline-none transition-colors duration-150 ease-out"
-                                        :disabled="!selectedIds.length"
-                                        :class="{
+                                        :disabled="!selectedIds.length" :class="{
                                             'cursor-not-allowed': !selectedIds.length,
                                             'cursor-pointer': selectedIds.length,
                                             'hover:bg-red-50 hover:text-red-600': selectedIds.length,
                                             'bg-gray-50': !selectedIds.length,
-                                        }"
-                                        @click="openDialog">
+                                        }" @click="openDialog">
                                         <IconTrash class="size-5" />
                                     </button>
                                 </div>
@@ -165,12 +170,15 @@ const isAllSelected = computed(() => selectedIds.value.length === Object.keys(pr
                                 <div class="flex flex-col p-6">
                                     <span class="text-xl font-medium text-gray-700">Are you sure?</span>
 
-                                    <span class="mt-2 text-sm text-gray-500"> This action cannot be undone, This will permanently delete the selected phrases and all of their translations. </span>
+                                    <span class="mt-2 text-sm text-gray-500"> This action cannot be undone, This will
+                                        permanently delete the selected phrases and all of their translations. </span>
 
                                     <div class="mt-4 flex gap-4">
-                                        <BaseButton variant="secondary" type="button" size="lg" full-width @click="closeDialog"> Cancel </BaseButton>
+                                        <BaseButton variant="secondary" type="button" size="lg" full-width
+                                            @click="closeDialog"> Cancel </BaseButton>
 
-                                        <BaseButton variant="danger" type="button" size="lg" :is-loading="loading" full-width @click="deletePhrases"> Delete </BaseButton>
+                                        <BaseButton variant="danger" type="button" size="lg" :is-loading="loading"
+                                            full-width @click="deletePhrases"> Delete </BaseButton>
                                     </div>
                                 </div>
                             </ConfirmationDialog>
@@ -178,7 +186,8 @@ const isAllSelected = computed(() => selectedIds.value.length === Object.keys(pr
                     </div>
                 </div>
 
-                <SourcePhraseItem v-for="phrase in phrases.data" :key="phrase.uuid" :phrase="phrase" :selected-ids="selectedIds" />
+                <SourcePhraseItem v-for="phrase in phrases.data" :key="phrase.uuid" :phrase="phrase"
+                    :selected-ids="selectedIds" />
 
                 <Pagination :links="phrases.links" :meta="phrases.meta" />
             </div>

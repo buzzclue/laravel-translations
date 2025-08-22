@@ -23,11 +23,13 @@ class SyncPhrasesAction
         $translation = Translation::firstOrCreate([
             'language_id' => $language->id,
             'source' => config('translations.source_language') === $locale,
+            'status' => config('translations.source_language') === $locale,
+            'is_default' => config('translations.source_language') === $locale,
         ]);
 
-        $isRoot = $file === $locale.'.json' || $file === $locale.'.php';
+        $isRoot = $file === $locale . '.json' || $file === $locale . '.php';
         $extension = pathinfo($file, PATHINFO_EXTENSION);
-        $filePath = str_replace('.'.$extension, '', preg_replace('/^'.preg_quote($locale.DIRECTORY_SEPARATOR, '/').'/', '', $file));
+        $filePath = str_replace('.' . $extension, '', preg_replace('/^' . preg_quote($locale . DIRECTORY_SEPARATOR, '/') . '/', '', $file));
 
         $translationFile = TranslationFile::firstOrCreate([
             'name' => $filePath,
@@ -36,7 +38,9 @@ class SyncPhrasesAction
         ]);
 
         $key = config('translations.include_file_in_key') && ! $isRoot ? "{$translationFile->name}.{$key}" : $key;
+        $group = $isRoot && config('translations.source_language') !== $locale ? $source->language->code : $translationFile->name;
         $method = $overwrite ? 'updateOrCreate' : 'firstOrCreate';
+
         $translation->phrases()->$method([
             'key' => $key,
             'group' => $translationFile->name,
@@ -44,7 +48,7 @@ class SyncPhrasesAction
         ], [
             'value' => (empty($value) ? null : $value),
             'parameters' => is_string($value) ? getPhraseParameters($value) : null,
-            'phrase_id' => $translation->source ? null : $source->phrases()->where('key', $key)->where('group', $translationFile->name)->first()?->id,
+            'phrase_id' => $translation->source ? null : $source->phrases()->where('key', $key)->where('group', $group)->first()?->id,
         ]);
     }
 }

@@ -128,7 +128,7 @@ class LanguagesTableSeeder extends Seeder
             [
                 'code' => 'dv',
                 'name' => 'Divehi',
-                'rtl' => false,
+                'rtl' => true,
             ],
             [
                 'code' => 'nl',
@@ -423,7 +423,7 @@ class LanguagesTableSeeder extends Seeder
             [
                 'code' => 'sd',
                 'name' => 'Sindhi',
-                'rtl' => false,
+                'rtl' => true,
             ],
             [
                 'code' => 'si',
@@ -503,7 +503,7 @@ class LanguagesTableSeeder extends Seeder
             [
                 'code' => 'ur',
                 'name' => 'Urdu',
-                'rtl' => false,
+                'rtl' => true,
             ],
             [
                 'code' => 'uz',
@@ -528,7 +528,7 @@ class LanguagesTableSeeder extends Seeder
             [
                 'code' => 'yi',
                 'name' => 'Yiddish',
-                'rtl' => false,
+                'rtl' => true,
             ],
             [
                 'code' => 'yo',

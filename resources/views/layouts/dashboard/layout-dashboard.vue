@@ -4,14 +4,13 @@ import Navbar from "./partials/navbar.vue"
 </script>
 
 <template>
-    <div class="min-h-full">
-        <div class="w-full bg-blue-600">
-            <Navbar />
+    <div class="container-fluid g-0">
+        <Navbar />
+        <div class="row">
+            <div class="col-12">
+                <slot />
+            </div>
         </div>
-        <main>
-            <slot />
-        </main>
-
-        <Modal />
     </div>
+    <Modal />
 </template>
