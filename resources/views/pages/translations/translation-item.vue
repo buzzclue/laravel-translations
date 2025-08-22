@@ -63,14 +63,14 @@ watch(
         </div>
 
         <div class="hidden w-full border-r sm:flex sm:w-14">
-            <Link v-tooltip="'Translate'" :href="route('ltu.phrases.index', translation.id)" class="relative inline-flex h-14 w-full cursor-pointer select-none items-center justify-center px-4 text-sm font-medium tracking-wide text-gray-400 outline-none transition-colors duration-150 ease-out hover:bg-blue-50 hover:text-blue-500 focus:border-blue-50">
+            <Link v-tooltip="'Translate'" :href="route('ltu.phrases.index', translation.id)" class="relative inline-flex h-14 w-full cursor-pointer select-none items-center justify-center text-sm font-medium tracking-wide text-gray-400 outline-none transition-colors duration-150 ease-out hover:bg-blue-50 hover:text-blue-500 focus:border-blue-50">
                 <IconLanguage class="hidden size-5 sm:flex" />
             </Link>
         </div>
 
         <div class="flex h-full">
             <div v-tooltip="'Delete'" class="flex w-full max-w-full">
-                <button type="button" class="relative inline-flex size-14 cursor-pointer select-none items-center justify-center p-4 text-sm font-medium uppercase tracking-wide text-gray-400 no-underline outline-none transition-colors duration-150 ease-out hover:bg-red-50 hover:text-red-600" @click="openDialog">
+                <button type="button" class="relative inline-flex size-14 cursor-pointer select-none items-center justify-center text-sm font-medium uppercase tracking-wide text-gray-400 no-underline outline-none transition-colors duration-150 ease-out hover:bg-red-50 hover:text-red-600" @click="openDialog">
                     <IconTrash class="size-5" />
                 </button>
             </div>

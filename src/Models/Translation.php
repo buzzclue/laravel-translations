@@ -19,6 +19,8 @@ class Translation extends Model
 
     protected $casts = [
         'source' => 'boolean',
+        'is_default' => 'boolean',
+        'status' => 'boolean',
     ];
 
     protected $with = [
@@ -38,6 +40,16 @@ class Translation extends Model
     public function scopeIsSource($query): void
     {
         $query->where('source', true);
+    }
+
+    public function scopeActive($query): void
+    {
+        $query->where('status', true);
+    }
+
+    public function scopeIsDefault($query): void
+    {
+        $query->where('is_default', true);
     }
 
     public function scopeWithProgress($query): void

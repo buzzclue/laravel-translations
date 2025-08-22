@@ -44,16 +44,16 @@ class PhraseController extends BaseController
         if ($request->has('filter.translationFile')) {
             $phrases->where(
                 ! is_null($request->input('filter.translationFile')) || ! empty($request->input('filter.translationFile'))
-                    ? fn (Builder $query) => $query->where('translation_file_id', $request->input('filter.translationFile'))
-                    : fn (Builder $query) => $query->whereNull('translation_file_id')
+                    ? fn(Builder $query) => $query->where('translation_file_id', $request->input('filter.translationFile'))
+                    : fn(Builder $query) => $query->whereNull('translation_file_id')
             );
         }
 
         if ($request->has('filter.status')) {
             $phrases->where(
                 $request->input('filter.status') === 'translated'
-                    ? fn (Builder $query) => $query->whereNotNull('value')
-                    : fn (Builder $query) => $query->whereNull('value')
+                    ? fn(Builder $query) => $query->whereNotNull('value')
+                    : fn(Builder $query) => $query->whereNull('value')
             );
         }
 
@@ -61,7 +61,7 @@ class PhraseController extends BaseController
             ->orderBy('key')
             ->paginate($request->input('perPage') ?? 12)
             ->withQueryString();
-
+// dd($phrases[0], $phrases[2]);
         $translation = $translation
             ->withCount('phrases')
             ->withProgress()
@@ -104,10 +104,10 @@ class PhraseController extends BaseController
                 'google' => [
                     'id' => 'google',
                     'engine' => 'Google Translate',
-                    'value' => (new GoogleTranslate)->preserveParameters()
+                    'value' => !blank($phrase->source?->value) ? (new GoogleTranslate)->preserveParameters()
                         ->setSource($phrase->source->translation->language->code)
                         ->setTarget($translation->language->code)
-                        ->translate($phrase->source->value),
+                        ->translate($phrase->source->value) : null,
                 ],
             ],
         ]);

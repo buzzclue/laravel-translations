@@ -26,9 +26,9 @@ const useTranslation = (value: string) => {
             @use-translation="useTranslation"
         />
 
-        <div class="flex h-20 w-full items-center justify-center px-4 py-6">
+        <!-- <div class="flex h-20 w-full items-center justify-center px-4 py-6">
             <span class="text-sm text-gray-500">More integrations coming in next releases...</span>
-        </div>
+        </div> -->
     </div>
 
     <div v-else class="relative flex size-full min-h-[250px]">

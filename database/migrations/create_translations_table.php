@@ -19,6 +19,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('language_id');
             $table->boolean('source')->default(false);
+            $table->boolean('is_default')->default(false);
+            $table->boolean('status')->status(true);
             $table->timestamps();
         });
     }

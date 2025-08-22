@@ -7,7 +7,6 @@ use Illuminate\Contracts\Support\Arrayable;
 use Inertia\Response;
 use Inertia\ResponseFactory;
 use Outhebox\TranslationsUI\Console\Commands\CleanOldVersionCommand;
-use Outhebox\TranslationsUI\Console\Commands\ContributorCommand;
 use Outhebox\TranslationsUI\Console\Commands\ExportTranslationsCommand;
 use Outhebox\TranslationsUI\Console\Commands\ImportTranslationsCommand;
 use Outhebox\TranslationsUI\Console\Commands\PublishCommand;
@@ -38,7 +37,6 @@ class TranslationsUIServiceProvider extends PackageServiceProvider
             ])
             ->hasCommands([
                 PublishCommand::class,
-                ContributorCommand::class,
                 CleanOldVersionCommand::class,
                 ImportTranslationsCommand::class,
                 ExportTranslationsCommand::class,

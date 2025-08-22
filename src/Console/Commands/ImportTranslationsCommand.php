@@ -37,7 +37,7 @@ class ImportTranslationsCommand extends Command
         $this->importLanguages();
 
         if ($this->option('fresh') && $this->confirm('Are you sure you want to truncate all translations and phrases?')) {
-            $this->info('Truncating translations and phrases...'.PHP_EOL);
+            $this->info('Truncating translations and phrases...' . PHP_EOL);
 
             $this->truncateTables();
         }
@@ -48,7 +48,7 @@ class ImportTranslationsCommand extends Command
 
         $translation = $this->createOrGetSourceLanguage();
 
-        $this->info('Importing translations...'.PHP_EOL);
+        $this->info('Importing translations...' . PHP_EOL);
 
         $this->withProgressBar($this->manager->getLocales(), function ($locale) use ($translation) {
             $this->syncTranslations($translation, $locale);
@@ -87,7 +87,7 @@ class ImportTranslationsCommand extends Command
         $language = Language::where('code', config('translations.source_language'))->first();
 
         if (! $language) {
-            $this->error('Language with code '.config('translations.source_language').' not found'.PHP_EOL);
+            $this->error('Language with code ' . config('translations.source_language') . ' not found' . PHP_EOL);
 
             exit;
         }
@@ -104,6 +104,8 @@ class ImportTranslationsCommand extends Command
 
         $translation = Translation::firstOrCreate([
             'source' => true,
+            'is_default' => true,
+            'status' => true,
             'language_id' => $language->id,
         ]);
 
@@ -134,18 +136,20 @@ class ImportTranslationsCommand extends Command
         $translation = Translation::firstOrCreate([
             'language_id' => $language->id,
             'source' => false,
+            'is_default' => false,
+            'status' => false,
         ]);
 
         $source->load('phrases.translation', 'phrases.file');
 
         $source->phrases->each(function ($phrase) use ($translation, $locale) {
             if (! $translation->phrases()->where('key', $phrase->key)->where('group', $phrase->group)->first()) {
-                $fileName = $phrase->file->name.'.'.$phrase->file->extension;
+                $fileName = $phrase->file->name . '.' . $phrase->file->extension;
 
                 if ($phrase->file->name === config('translations.source_language')) {
-                    $fileName = Str::replaceStart(config('translations.source_language').'.', "{$locale}.", $fileName);
+                    $fileName = Str::replaceStart(config('translations.source_language') . '.', "{$locale}.", $fileName);
                 } else {
-                    $fileName = Str::replaceStart(config('translations.source_language').'/', "{$locale}/", $fileName);
+                    $fileName = Str::replaceStart(config('translations.source_language') . '/', "{$locale}/", $fileName);
                 }
 
                 SyncPhrasesAction::execute($phrase->translation, $phrase->key, '', $locale, $fileName);

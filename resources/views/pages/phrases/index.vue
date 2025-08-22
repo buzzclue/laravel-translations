@@ -65,8 +65,8 @@ watch(
     <Head title="Phrases" />
 
     <LayoutDashboard>
-        <div class="w-full bg-white shadow">
-            <div class="mx-auto flex w-full max-w-7xl items-center justify-between px-6 lg:px-8">
+        <div class="w-full bg-white shadow-sm rounded">
+            <div class="mx-auto flex w-full items-center justify-between px-3 mt-3">
                 <div class="flex w-full items-center">
                     <div class="flex w-full items-center gap-3 py-4">
                         <Link :href="route('ltu.phrases.index', translation.id)" class="flex items-center gap-2 rounded-md border border-transparent bg-gray-50 px-2 py-1 hover:border-blue-400 hover:bg-blue-100">
@@ -89,7 +89,7 @@ watch(
             </div>
         </div>
 
-        <div class="mx-auto max-w-7xl px-6 py-10 lg:px-8">
+        <div class="mx-auto py-4">
             <div class="w-full divide-y overflow-hidden rounded-md bg-white shadow">
                 <div class="flex w-full flex-wrap items-center justify-between gap-4 px-4 py-3 sm:flex-nowrap">
                     <div class="w-full max-w-full md:max-w-sm">
