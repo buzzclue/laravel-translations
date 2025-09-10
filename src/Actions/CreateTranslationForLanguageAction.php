@@ -12,6 +12,8 @@ class CreateTranslationForLanguageAction
         $translation = Translation::create([
             'source' => false,
             'language_id' => $language->id,
+            'is_default' => false,
+            'status' => false,
         ]);
 
         CopyPhrasesFromSourceAction::execute($translation);

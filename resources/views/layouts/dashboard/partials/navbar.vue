@@ -17,9 +17,8 @@ const loading = ref(false)
             Translations
             </Link>
             <div class="d-flex gap-2">
-                <Link :href="route('ltu.translation.import')" method="post" class="px-3 py-2 rounded-md bg-green-600 text-white font-medium
-         hover:bg-green-700 focus:outline-none focus:ring-2
-         focus:ring-green-500 focus:ring-offset-2 d-inline-flex align-items-center" :disabled="loading"
+                <Link :href="route('ltu.translation.import')" method="post"
+                    class="btn btn-success d-inline-flex align-items-center" :disabled="loading"
                     :onStart="() => (loading = true)" :onFinish="() => (loading = false)">
                 <template v-if="loading">
                     <div class="spinner-border spinner-border-sm me-1" role="status" />

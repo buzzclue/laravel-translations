@@ -25,7 +25,7 @@ const { variantClass } = useButtonVariant(props.variant)
 
 <template>
     <button :type="type" class="btn" :class="[sizeClass, variantClass, { 'w-full': fullWidth }]" :disabled="isLoading">
-        <span class="flex items-center gap-1" :class="{ 'opacity-0': isLoading }">
+        <span class="flex items-center gap-1 justify-center" :class="{ 'opacity-0': isLoading }">
             <slot />
         </span>
 

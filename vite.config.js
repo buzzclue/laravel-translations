@@ -5,6 +5,16 @@ import autoimport from "unplugin-auto-import/vite"
 import components from "unplugin-vue-components/vite"
 
 export default defineConfig({
+    server: {
+        host: "127.0.0.1",
+        port: 5173,
+        hmr: {
+            host: "localhost"
+        },
+        cors: {
+            origin: "*"
+        }
+    },
     resolve: {
         alias: {
             "@": "/resources",
@@ -17,7 +27,7 @@ export default defineConfig({
             ssr: "resources/scripts/ssr.ts",
             publicDirectory: "resources/dist",
             buildDirectory: "vendor/translations-ui",
-            refresh: true,
+            refresh: false,
         }),
         vue({
             template: {

@@ -84,6 +84,8 @@ const isImporting = ref(false)
                         class="hidden flex-1 items-center px-4 text-sm text-gray-500 md:flex md:max-w-72 lg:max-w-80 xl:max-w-96">
                         Translation progress</div>
 
+                    <div class="w-full sm:w-14"></div>
+                    <div class="w-full sm:w-14"></div>
                     <div class="w-full sm:w-14">
                         <Link v-tooltip="'Add Language'" :href="route('ltu.translation.create')"
                             class="relative inline-flex h-14 w-full cursor-pointer select-none items-center justify-center text-sm font-medium tracking-wide text-gray-700 outline-none transition-colors duration-150 ease-out hover:bg-blue-50 hover:text-blue-500 focus:border-blue-50 sm:text-gray-400">
@@ -167,6 +169,30 @@ const isImporting = ref(false)
                             </Link>
                         </div>
 
+
+
+                        <Link v-tooltip="!sourceTranslation.status ? 'Enable' : 'Disable'" method="post"
+                            :href="route('ltu.translations.toggle', sourceTranslation.id)"
+                            class="group hidden w-full border-r sm:flex sm:w-14"
+                            :disabled="sourceTranslation.is_default">
+                        <div class="relative inline-flex h-14 w-full cursor-pointer select-none items-center justify-center text-sm font-medium tracking-wide text-gray-400 outline-none transition-colors duration-150 ease-out"
+                            :class="!sourceTranslation.status ? 'hover:bg-green-50 hover:text-green-500 focus:border-green-50' : 'hover:bg-red-50 hover:text-red-500 focus:border-red-50'">
+                            <IconDisable v-if="!sourceTranslation.status" class="hidden size-5 sm:flex" />
+                            <IconEnable v-else class="hidden size-5 sm:flex" />
+                        </div>
+                        </Link>
+
+                        <Link
+                            v-tooltip="sourceTranslation.is_default ? 'Default Language' : 'Make this the Default Language'"
+                            method="post" :href="route('ltu.translations.setDefault', sourceTranslation.id)"
+                            class="group hidden w-full border-r sm:flex sm:w-14"
+                            :disabled="sourceTranslation.is_default">
+                        <div class="relative inline-flex h-14 w-full cursor-pointer select-none items-center justify-center text-sm font-medium tracking-wide outline-none transition duration-200 ease-in-out hover:bg-green-50 focus:ring-2 focus:ring-green-100"
+                            :class="sourceTranslation.is_default ? 'text-yellow-500' : 'text-gray-400'">
+                            <IconStar class="hidden size-5 fill-current sm:flex" />
+                        </div>
+                        </Link>
+
                         <Link v-tooltip="'Manage Keys'" :href="route('ltu.source_translation')"
                             class="group hidden w-full border-r sm:flex sm:w-14">
                         <div
@@ -223,10 +249,9 @@ const isImporting = ref(false)
                     <IconEmptyTranslations class=" w-20 text-gray-400" />
                 </template>
 
-                <Link :href="route('ltu.translation.import')" method="post" class="px-3 py-2 rounded-md bg-green-600 text-white font-medium
-         hover:bg-green-700 focus:outline-none focus:ring-2
-         focus:ring-green-500 focus:ring-offset-2 d-inline-flex align-items-center mt-3" :disabled="isImporting"
-                    :onStart="() => (isImporting = true)" :onFinish="() => (isImporting = false)">
+                <Link :href="route('ltu.translation.import')" method="post" class="btn btn-success mt-3"
+                    :disabled="isImporting" :onStart="() => (isImporting = true)"
+                    :onFinish="() => (isImporting = false)">
                 <template v-if="isImporting">
                     <div class="spinner-border spinner-border-sm me-1" role="status" />
                     <span>Importing...</span>

@@ -21,6 +21,8 @@ class TranslationResource extends JsonResource
             'id' => $this->id,
             'language' => LanguageResource::make($this->whenLoaded('language')),
             'source' => $this->source,
+            'status' => $this->status,
+            'is_default' => $this->is_default,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at?->format('Y-m-d H:i:s'),
             'progress' => $this->formatProgress(),

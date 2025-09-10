@@ -95,6 +95,8 @@ export type Translation = {
     source_translation: SourceTranslation
     progress: number
     source: boolean
+    is_default: boolean
+    status: boolean
     phrases_count: number
     created_at: string
     updated_at: string

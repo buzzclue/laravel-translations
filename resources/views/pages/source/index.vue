@@ -128,7 +128,7 @@ const isAllSelected = computed(() => selectedIds.value.length === Object.keys(pr
 
                 <div class="w-full shadow-md">
                     <div class="flex h-14 w-full divide-x">
-                        <div class="flex w-12 items-center justify-center p-4">
+                        <div class="flex w-12 items-center justify-center">
                             <InputCheckbox :disabled="!phrases.data.length" :checked="isAllSelected"
                                 @click="toggleSelection" />
                         </div>
@@ -154,7 +154,7 @@ const isAllSelected = computed(() => selectedIds.value.length === Object.keys(pr
                                     <button
                                         v-tooltip="selectedIds.length ? 'Delete selected' : 'Select phrases to delete'"
                                         type="button"
-                                        class="relative inline-flex size-14 select-none items-center justify-center p-4 text-sm font-medium uppercase tracking-wide text-gray-400 no-underline outline-none transition-colors duration-150 ease-out"
+                                        class="relative inline-flex size-14 select-none items-center justify-center text-sm font-medium uppercase tracking-wide text-gray-400 no-underline outline-none transition-colors duration-150 ease-out"
                                         :disabled="!selectedIds.length" :class="{
                                             'cursor-not-allowed': !selectedIds.length,
                                             'cursor-pointer': selectedIds.length,
