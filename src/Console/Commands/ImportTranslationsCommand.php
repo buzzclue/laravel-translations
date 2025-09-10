@@ -137,7 +137,7 @@ class ImportTranslationsCommand extends Command
             'language_id' => $language->id,
             'source' => false,
             'is_default' => false,
-            'status' => false,
+            'status' => true,
         ]);
 
         $source->load('phrases.translation', 'phrases.file');

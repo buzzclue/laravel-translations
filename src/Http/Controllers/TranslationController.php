@@ -3,19 +3,21 @@
 namespace Outhebox\TranslationsUI\Http\Controllers;
 
 use Exception;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller as BaseController;
 use Inertia\Inertia;
 use Inertia\Response;
-use Outhebox\TranslationsUI\Actions\CreateTranslationForLanguageAction;
-use Outhebox\TranslationsUI\Http\Resources\LanguageResource;
-use Outhebox\TranslationsUI\Http\Resources\TranslationResource;
+use Illuminate\Http\Request;
 use Outhebox\TranslationsUI\Modal;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Artisan;
 use Outhebox\TranslationsUI\Models\Language;
 use Outhebox\TranslationsUI\Models\Translation;
 use Outhebox\TranslationsUI\TranslationsManager;
-use Illuminate\Support\Facades\Artisan;
+use Illuminate\Routing\Controller as BaseController;
+use Outhebox\TranslationsUI\Events\TranslationChanged;
+use Outhebox\TranslationsUI\Jobs\ImportTranslationsJob;
+use Outhebox\TranslationsUI\Http\Resources\LanguageResource;
+use Outhebox\TranslationsUI\Http\Resources\TranslationResource;
+use Outhebox\TranslationsUI\Actions\CreateTranslationForLanguageAction;
 
 class TranslationController extends BaseController
 {
@@ -47,16 +49,26 @@ class TranslationController extends BaseController
     public function import(): RedirectResponse
     {
         try {
-            set_time_limit(0);
+            if (config('queue.default') === 'sync') {
+                set_time_limit(0);
+                // Run inline (blocking)
+                Artisan::call('translations:import', [
+                    '--no-overwrite' => true,
+                ]);
 
-            Artisan::call('translations:import', [
-                '--no-overwrite' => true,
-            ]);
+                return back()->with('notification', [
+                    'type' => 'success',
+                    'body' => 'Translations have been imported successfully',
+                ]);
+            } else {
+                // Run as queued job
+                ImportTranslationsJob::dispatch();
 
-            return back()->with('notification', [
-                'type' => 'success',
-                'body' => 'Translations have been imported successfully',
-            ]);
+                return back()->with('notification', [
+                    'type' => 'success',
+                    'body' => 'Import has started and is running in the background.',
+                ]);
+            }
         } catch (Exception $e) {
             return back()->with('notification', [
                 'type' => 'error',
@@ -120,7 +132,73 @@ class TranslationController extends BaseController
             'type' => 'success',
             'body' => 'Translations have been added successfully',
         ]);
+    }
 
+    public function toggle(Translation $translation): RedirectResponse
+    {
+        // Prevent disabling the default language
+        if ($translation->is_default) {
+            return back()->with('notification', [
+                'type' => 'error',
+                'body' => 'The default language cannot be disabled.',
+            ]);
+        }
+
+        // If disabling and this is the last active translation → block
+        if ($translation->status && Translation::where('status', true)->count() === 1) {
+            return back()->with('notification', [
+                'type' => 'error',
+                'body' => 'At least one active language must remain enabled.',
+            ]);
+        }
+
+        // Toggle status
+        $translation->update([
+            'status' => ! $translation->status,
+        ]);
+
+        TranslationChanged::dispatch($translation);
+
+        return back()->with('notification', [
+            'type' => 'success',
+            'body' => 'Translation status updated successfully.',
+        ]);
+    }
+
+    public function setDefault(Translation $translation): RedirectResponse
+    {
+        // Prevent setting inactive language as default
+        if (! $translation->status) {
+            return back()->with('notification', [
+                'type' => 'error',
+                'body' => 'You cannot set an inactive language as the default.',
+            ]);
+        }
+
+        // If it's already default, just return
+        if ($translation->is_default) {
+            return back()->with('notification', [
+                'type' => 'info',
+                'body' => 'This language is already the default.',
+            ]);
+        }
+
+        // Wrap in transaction for consistency
+        \DB::transaction(function () use ($translation) {
+            // Unset the current default
+            Translation::where('is_default', true)->update(['is_default' => false]);
+
+            // Set the new default
+            $translation->update(['is_default' => true]);
+        });
+
+        // Optionally dispatch an event
+        TranslationChanged::dispatch($translation);
+
+        return back()->with('notification', [
+            'type' => 'success',
+            'body' => "{$translation->language->name} has been set as the default language.",
+        ]);
     }
 
     public function destroy(Translation $translation): RedirectResponse

@@ -22,6 +22,9 @@ Route::domain(config('translations.domain'))->group(function () {
         Route::get('add-translation', [TranslationController::class, 'create'])->name('translation.create');
         Route::post('add-translation', [TranslationController::class, 'store'])->name('translation.store');
 
+        Route::post('/translations/{translation}/toggle', [TranslationController::class, 'toggle'])->name('translations.toggle');
+        Route::post('/translations/{translation}/default', [TranslationController::class, 'setDefault'])->name('translations.setDefault');
+
         // Source Phrase Routes
         Route::prefix('source-translation')->group(function () {
             Route::get('/', [SourcePhraseController::class, 'index'])->name('source_translation');

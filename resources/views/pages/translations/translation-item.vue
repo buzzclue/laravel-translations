@@ -36,60 +36,100 @@ watch(
             </div>
 
             <Link :href="route('ltu.phrases.index', translation.id)" class="flex w-full divide-x">
-                <div class="flex flex-1 justify-between gap-x-4 truncate px-4">
-                    <div class="flex w-full items-center truncate font-medium">
-                        <Flag :country-code="translation.language.code" class="mr-2" />
+            <div class="flex flex-1 justify-between gap-x-4 truncate px-4">
+                <div class="flex w-full items-center truncate font-medium">
+                    <Flag :country-code="translation.language.code" class="mr-2" />
 
-                        <span class="mr-2 max-w-full truncate text-base text-gray-700">
-                            {{ translation.language.name }}
+                    <span class="mr-2 max-w-full truncate text-base text-gray-700">
+                        {{ translation.language.name }}
+                    </span>
+
+                    <div class="inline-block">
+                        <span
+                            class="flex h-5 items-center rounded-md border px-1.5 text-xs font-normal leading-none text-gray-600">
+                            {{ translation.language.code }}
                         </span>
-
-                        <div class="inline-block">
-                            <span class="flex h-5 items-center rounded-md border px-1.5 text-xs font-normal leading-none text-gray-600">
-                                {{ translation.language.code }}
-                            </span>
-                        </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="hidden flex-1 flex-wrap content-center items-center gap-1 px-4 md:flex md:max-w-72 lg:max-w-80 xl:max-w-96">
-                    <div v-tooltip="`${translation.progress}` + ' strings translated'" class="w-full py-2">
-                        <div class="translation-progress w-full overflow-hidden rounded-full bg-gray-200">
-                            <div class="h-2 bg-green-600" :style="{ width: `${translation.progress}` }"></div>
-                        </div>
+            <div
+                class="hidden flex-1 flex-wrap content-center items-center gap-1 px-4 md:flex md:max-w-72 lg:max-w-80 xl:max-w-96">
+                <div v-tooltip="`${translation.progress}` + ' strings translated'" class="w-full py-2">
+                    <div class="translation-progress w-full overflow-hidden rounded-full bg-gray-200">
+                        <div class="h-2 bg-green-600" :style="{ width: `${translation.progress}` }"></div>
                     </div>
                 </div>
+            </div>
             </Link>
         </div>
 
         <div class="hidden w-full border-r sm:flex sm:w-14">
-            <Link v-tooltip="'Translate'" :href="route('ltu.phrases.index', translation.id)" class="relative inline-flex h-14 w-full cursor-pointer select-none items-center justify-center text-sm font-medium tracking-wide text-gray-400 outline-none transition-colors duration-150 ease-out hover:bg-blue-50 hover:text-blue-500 focus:border-blue-50">
-                <IconLanguage class="hidden size-5 sm:flex" />
+            <Link v-tooltip="!translation.status ? 'Enable' : 'Disable'" method="post"
+                :href="route('ltu.translations.toggle', translation.id)" :disabled="translation.is_default"
+                class="relative inline-flex h-14 w-full cursor-pointer select-none items-center justify-center text-sm font-medium tracking-wide text-gray-400 outline-none transition-colors duration-150 ease-out"
+                :class="!translation.status ? 'hover:bg-green-50 hover:text-green-500 focus:border-green-50' : 'hover:bg-red-50 hover:text-red-500 focus:border-red-50'">
+            <IconDisable v-if="!translation.status" class="hidden size-5 sm:flex" />
+            <IconEnable v-else class="hidden size-5 sm:flex" />
+            </Link>
+        </div>
+        <div class="hidden w-full border-r sm:flex sm:w-14">
+            <Link v-tooltip="translation.is_default ? 'Default Language' : 'Make this the Default Language'"
+                method="post" :href="route('ltu.translations.setDefault', translation.id)"
+                class="group hidden w-full border-r sm:flex sm:w-14" :disabled="translation.is_default">
+            <div class="relative inline-flex h-14 w-full cursor-pointer select-none items-center justify-center text-sm font-medium tracking-wide outline-none transition duration-200 ease-in-out hover:bg-green-50 hover:text-green-500 focus:ring-2 focus:ring-green-100"
+                :class="translation.is_default ? 'text-yellow-500' : 'text-gray-400'">
+                <IconStar class="hidden size-5 fill-current sm:flex" />
+            </div>
+            </Link>
+        </div>
+        <div class="hidden w-full border-r sm:flex sm:w-14">
+            <Link v-tooltip="'Translate'" :href="route('ltu.phrases.index', translation.id)"
+                class="relative inline-flex h-14 w-full cursor-pointer select-none items-center justify-center text-sm font-medium tracking-wide text-gray-400 outline-none transition-colors duration-150 ease-out hover:bg-blue-50 hover:text-blue-500 focus:border-blue-50">
+            <IconLanguage class="hidden size-5 sm:flex" />
             </Link>
         </div>
 
         <div class="flex h-full">
-            <div v-tooltip="'Delete'" class="flex w-full max-w-full">
-                <button type="button" class="relative inline-flex size-14 cursor-pointer select-none items-center justify-center text-sm font-medium uppercase tracking-wide text-gray-400 no-underline outline-none transition-colors duration-150 ease-out hover:bg-red-50 hover:text-red-600" @click="openDialog">
-                    <IconTrash class="size-5" />
-                </button>
-            </div>
-
-            <ConfirmationDialog size="sm" :show="showDialog">
-                <div class="flex flex-col p-6">
-                    <span class="text-xl font-medium text-gray-700">Are you sure?</span>
-
-                    <span class="mt-2 text-sm text-gray-500">
-                        This action cannot be undone, This will permanently delete the <span class="font-medium text-gray-900">{{ translation.language.name }}</span> language and all of its translations.
-                    </span>
-
-                    <div class="mt-4 flex gap-4">
-                        <BaseButton variant="secondary" type="button" size="lg" full-width @click="closeDialog"> Cancel </BaseButton>
-
-                        <BaseButton variant="danger" type="button" size="lg" :is-loading="loading" full-width @click="deleteTranslation(translation.id)"> Delete </BaseButton>
-                    </div>
+            <template v-if="translation.is_default">
+                <div v-tooltip="'Can not delete the default language.'" class="flex w-full max-w-full">
+                    <button type="button"
+                        class="relative inline-flex size-14 cursor-not-allowed select-none items-center justify-center text-sm font-medium uppercase tracking-wide text-gray-400 no-underline outline-none"
+                        disabled>
+                        <IconTrash class="size-5" />
+                    </button>
                 </div>
-            </ConfirmationDialog>
+            </template>
+            <template v-else>
+                <div v-tooltip="'Delete'" class="flex w-full max-w-full">
+                    <button type="button"
+                        class="relative inline-flex size-14  cursor-not-allowed  select-none items-center justify-center text-sm font-medium uppercase tracking-wide text-gray-400 no-underline outline-none transition-colors duration-150 ease-out hover:bg-red-50 hover:text-red-600">
+                        <IconTrash class="size-5" />
+                    </button>
+                </div>
+
+                <ConfirmationDialog size="sm" :show="showDialog">
+                    <div class="flex flex-col p-6">
+                        <span class="text-xl font-medium text-gray-700">Are you sure?</span>
+
+                        <span class="mt-2 text-sm text-gray-500">
+                            This action cannot be undone, This will permanently delete the <span
+                                class="font-medium text-gray-900">{{ translation.language.name }}</span> language and
+                            all of
+                            its translations.
+                        </span>
+
+                        <div class="mt-4 flex gap-4">
+                            <BaseButton variant="secondary" type="button" size="lg" full-width @click="closeDialog">
+                                Cancel
+                            </BaseButton>
+
+                            <BaseButton variant="danger" type="button" size="lg" :is-loading="loading" full-width
+                                @click="deleteTranslation(translation.id)"> Delete </BaseButton>
+                        </div>
+                    </div>
+                </ConfirmationDialog>
+            </template>
         </div>
     </div>
 </template>
