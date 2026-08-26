@@ -68,7 +68,7 @@ class TranslationsUIServiceProvider extends PackageServiceProvider
 
     public function packageBooted(): void
     {
-        $this->registerAuthDriver();
+        //$this->registerAuthDriver(); // We will use the default auth with permissions.
 
         $this->registerExceptionHandler();
 
