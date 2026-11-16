@@ -192,12 +192,12 @@
     ]
   },
   "resources/scripts/app.css": {
-    "file": "assets/app-70196efb.css",
+    "file": "assets/app-d08ecee1.css",
     "src": "resources/scripts/app.css"
   },
   "resources/scripts/app.ts": {
     "css": [
-      "assets/app-70196efb.css"
+      "assets/app-d08ecee1.css"
     ],
     "dynamicImports": [
       "resources/views/pages/error.vue",

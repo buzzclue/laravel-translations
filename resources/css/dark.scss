@@ -1,0 +1,192 @@
+// Dark colour mode. The admin panel (CoreUI) sets data-coreui-theme="dark" on <html>;
+// Bootstrap-styled parts of the UI follow it by themselves. This file recolours the
+// Tailwind utilities and the third-party widgets (vue-select, floating-vue) that
+// hard-code light colours. Every value reads a CoreUI/Bootstrap variable, with a
+// fallback so the package still works without the admin theme.
+
+[data-coreui-theme="dark"] {
+    // Surfaces
+    .bg-gray-100,
+    .bg-gray-300 {
+        background-color: var(--bs-secondary-bg, #1f2937);
+    }
+
+    .hover\:bg-gray-200:hover {
+        background-color: var(--bs-tertiary-bg, #374151);
+    }
+
+    // Text
+    .text-gray-200 {
+        color: var(--bs-tertiary-color, #6b7280);
+    }
+
+    .text-gray-500 {
+        color: var(--bs-secondary-color, #9ca3af);
+    }
+
+    .text-gray-700,
+    .text-gray-900 {
+        color: var(--bs-body-color, #f3f4f6);
+    }
+
+    .hover\:text-gray-600:hover {
+        color: var(--bs-emphasis-color, #fff);
+    }
+
+    .placeholder\:text-gray-400::placeholder {
+        color: var(--bs-tertiary-color, #6b7280);
+    }
+
+    // Borders
+    .border-gray-300,
+    .divide-x > :not([hidden]) ~ :not([hidden]) {
+        border-color: var(--bs-border-color, #374151);
+    }
+
+    // Accent colours (links, focus, selected)
+    .text-blue-200,
+    .text-blue-400,
+    .text-blue-600,
+    .hover\:text-blue-600:hover,
+    .focus\:text-blue-500:focus {
+        color: var(--bs-link-color, #c8f34b);
+    }
+
+    .text-indigo-600 {
+        color: var(--bs-primary, #c8f34b);
+    }
+
+    .bg-blue-100,
+    .hover\:bg-blue-50:hover {
+        background-color: var(--bs-primary-bg-subtle, rgba(200, 243, 75, 0.14));
+    }
+
+    .border-blue-200,
+    .hover\:border-blue-400:hover,
+    .focus\:border-blue-500:focus {
+        border-color: var(--bs-primary-border-subtle, rgba(200, 243, 75, 0.35));
+    }
+
+    .ring-blue-100,
+    .focus\:ring-green-100:focus {
+        --tw-ring-color: var(--bs-primary-border-subtle, rgba(200, 243, 75, 0.35));
+    }
+
+    // Status colours (alerts, validation)
+    .bg-green-50,
+    .hover\:bg-green-100:hover {
+        background-color: var(--bs-success-bg-subtle, rgba(25, 135, 84, 0.2));
+    }
+
+    .text-green-600,
+    .hover\:text-green-500:hover {
+        color: var(--bs-success-text-emphasis, #75b798);
+    }
+
+    .bg-red-50,
+    .hover\:bg-red-50:hover {
+        background-color: var(--bs-danger-bg-subtle, rgba(220, 53, 69, 0.2));
+    }
+
+    .text-red-600,
+    .text-red-900,
+    .hover\:text-red-600:hover {
+        color: var(--bs-danger-text-emphasis, #ea868f);
+    }
+
+    .border-red-300,
+    .border-red-500,
+    .focus\:border-red-500:focus {
+        border-color: var(--bs-danger-border-subtle, #842029);
+    }
+
+    .placeholder\:text-red-300::placeholder {
+        color: var(--bs-danger-border-subtle, #842029);
+    }
+
+    .bg-yellow-50 {
+        background-color: var(--bs-warning-bg-subtle, rgba(255, 193, 7, 0.18));
+    }
+
+    .text-yellow-700 {
+        color: var(--bs-warning-text-emphasis, #ffda6a);
+    }
+
+    // vue-select
+    .vs__dropdown-toggle,
+    .vs__dropdown-menu {
+        background-color: var(--bs-body-bg, #111827);
+        color: var(--bs-body-color, #f3f4f6);
+        border-color: var(--bs-border-color, #374151);
+    }
+
+    .vs--open .vs__dropdown-toggle {
+        background-color: var(--bs-primary-bg-subtle, rgba(200, 243, 75, 0.14));
+        color: var(--bs-link-color, #c8f34b);
+        border-color: var(--bs-primary-border-subtle, rgba(200, 243, 75, 0.35));
+    }
+
+    .vs__selected {
+        background-color: var(--bs-primary-bg-subtle, rgba(200, 243, 75, 0.14));
+        color: var(--bs-link-color, #c8f34b);
+        border-color: var(--bs-primary-border-subtle, rgba(200, 243, 75, 0.35));
+    }
+
+    .vs__search,
+    .vs__no-options {
+        color: var(--bs-secondary-color, #9ca3af);
+    }
+
+    .vs__dropdown-option {
+        color: var(--bs-body-color, #f3f4f6);
+    }
+
+    .vs__dropdown-option--highlight {
+        background-color: var(--bs-primary-bg-subtle, rgba(200, 243, 75, 0.14));
+        color: var(--bs-link-color, #c8f34b);
+    }
+
+    .vs__clear,
+    .vs__open-indicator {
+        fill: var(--bs-secondary-color, #9ca3af);
+    }
+
+    // floating-vue tooltips and popovers
+    .v-popper--theme-dropdown .v-popper__inner {
+        background-color: var(--bs-body-bg, #111827);
+        color: var(--bs-body-color, #f3f4f6);
+        border-color: var(--bs-border-color, #374151);
+    }
+
+    .v-popper--theme-tooltip .v-popper__inner {
+        background-color: var(--bs-secondary-bg, #1f2937);
+        color: var(--bs-body-color, #f3f4f6);
+    }
+
+    .v-popper--theme-tooltip .v-popper__arrow-inner {
+        border-color: var(--bs-secondary-bg, #1f2937);
+    }
+
+    .v-popper--theme-dropdown .v-popper__arrow-inner {
+        border-color: var(--bs-body-bg, #111827);
+    }
+
+    // tabs
+    .tabs-component {
+        background-color: var(--bs-body-bg, #111827);
+    }
+
+    .tabs-component .tabs-component-tabs {
+        background-color: var(--bs-secondary-bg, #1f2937);
+        border-color: var(--bs-border-color, #374151);
+    }
+
+    .tabs-component .tabs-component-tab.is-active {
+        background-color: var(--bs-body-bg, #111827);
+    }
+
+    .tabs-component .tabs-component-tab:hover {
+        background-color: var(--bs-tertiary-bg, #374151);
+    }
+}
+
